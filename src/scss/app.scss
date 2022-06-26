@@ -29,6 +29,10 @@ body {
     justify-content: space-between;
   }
 
+  &__items:last-child {
+    justify-content: start;
+  }
+
   &__top {
     display: flex;
     align-items: center;
