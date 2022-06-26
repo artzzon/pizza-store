@@ -26,7 +26,7 @@ export default function Sort() {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setIsOpenedSort(!isOpenedSort)}>популярности</span>
+        <span onClick={() => setIsOpenedSort(!isOpenedSort)}>{sortCategories[activeSortCategory]}</span>
       </div>
       {isOpenedSort &&
         <div className="sort__popup">
