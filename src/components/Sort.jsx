@@ -32,7 +32,7 @@ export default function Sort() {
         <div className="sort__popup">
           <ul>
             {sortCategories.map((category, index) => (
-              <li onClick={() => clickSortCategory(index)} className={activeSortCategory === index && 'active'}>{category}</li>
+              <li key={index} onClick={() => clickSortCategory(index)} className={activeSortCategory === index ? 'active' : ''}>{category}</li>
             ))}
           </ul>
         </div>}
