@@ -1,13 +1,19 @@
 import React, { useState } from 'react'
 
-export default function Sort() {
+export default function Sort({ activeSortCategory, onClickSort }) {
   const [isOpenedSort, setIsOpenedSort] = useState(false);
-  const [activeSortCategory, setActiveSortCategory] = useState(0);
 
-  const sortCategories = ['популярности', 'цене', 'алфавиту'];
+  const sortCategories = [
+    { name: 'популярности (DESC)', sortProperty: 'rating' },
+    { name: 'популярности (ASC)', sortProperty: '-rating' },
+    { name: 'цене (DESC)', sortProperty: 'price' },
+    { name: 'цене (ASC)', sortProperty: '-price' },
+    { name: 'алфавиту (DESC)', sortProperty: 'title' },
+    { name: 'алфавиту (ASC)', sortProperty: '-title' },
+  ];
 
   const clickSortCategory = (index) => {
-    setActiveSortCategory(index);
+    onClickSort(index);
     setIsOpenedSort(false);
   }
 
@@ -26,13 +32,18 @@ export default function Sort() {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setIsOpenedSort(!isOpenedSort)}>{sortCategories[activeSortCategory]}</span>
+        <span onClick={() => setIsOpenedSort(!isOpenedSort)}>{activeSortCategory.name}</span>
       </div>
       {isOpenedSort &&
         <div className="sort__popup">
           <ul>
-            {sortCategories.map((category, index) => (
-              <li key={index} onClick={() => clickSortCategory(index)} className={activeSortCategory === index ? 'active' : ''}>{category}</li>
+            {sortCategories.map((obj, index) => (
+              <li
+                key={index}
+                onClick={() => clickSortCategory(obj)}
+                className={activeSortCategory.sortProperty === obj.sortProperty ? 'active' : ''}>
+                {obj.name}
+                </li>
             ))}
           </ul>
         </div>}
