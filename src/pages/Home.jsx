@@ -5,8 +5,10 @@ import Sort from '../components/Sort';
 import Pizza from '../components/Pizza';
 import Skeleton from '../components/Pizza/Skeleton';
 import Pagination from '../components/Pagination';
+import { SearchContext } from '../App';
 
-export default function Home({ searchValue }) {
+export default function Home() {
+  const { searchValue } = React.useContext(SearchContext);
   const [pizzas, setPizzas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [category, setCategory] = useState(0);
@@ -24,7 +26,7 @@ export default function Home({ searchValue }) {
     const currentCategory = category > 0 ? `category=${category}` : '';
     const search = searchValue ? `search=${searchValue}` : '';
 
-    fetch(`https://62b8a44403c36cb9b7ca1e33.mockapi.io/items?page=${currentPage}&limit=4&${currentCategory}&sortBy=${sortBy}&order=${order}${search}`
+    fetch(`https://62b8a44403c36cb9b7ca1e33.mockapi.io/items?page=${currentPage}&limit=4&${currentCategory}&sortBy=${sortBy}&order=${order}&${search}`
     )
       .then((res) => res.json())
       .then((arr) => {
@@ -38,14 +40,6 @@ export default function Home({ searchValue }) {
     //.filter(obj => obj.title.toLowerCase().includes(searchValue.toLowerCase()))
     .map((pizza) => <Pizza key={pizza.id} {...pizza} />);
   const skeleton = [...new Array(6)].map((_, index) => <Skeleton key={index} />);
-
-  // const handlePageClick = (event) => {
-  //   const newOffset = (event.selected * itemsPerPage) % items.length;
-  //   console.log(
-  //     `User requested page number ${event.selected}, which is offset ${newOffset}`
-  //   );
-  //   setItemOffset(newOffset);
-  // };
 
   return (
     <div className="container">
