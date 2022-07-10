@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 
 //redux
@@ -13,8 +14,8 @@ import { SearchContext } from '../App';
 
 const Home = () => {
   const dispatch = useDispatch();
-  const {category, sort} = useSelector(state => state.filter);
-  
+  const { category, sort } = useSelector(state => state.filter);
+
   const { searchValue } = React.useContext(SearchContext);
   const [pizzas, setPizzas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,13 +33,12 @@ const Home = () => {
     const currentCategory = category > 0 ? `category=${category}` : '';
     const search = searchValue ? `search=${searchValue}` : '';
 
-    fetch(`https://62b8a44403c36cb9b7ca1e33.mockapi.io/items?page=${currentPage}&limit=4&${currentCategory}&sortBy=${sortBy}&order=${order}&${search}`
-    )
-      .then((res) => res.json())
-      .then((arr) => {
-        setPizzas(arr);
+    axios.get(`https://62b8a44403c36cb9b7ca1e33.mockapi.io/items?page=${currentPage}&limit=4&${currentCategory}&sortBy=${sortBy}&order=${order}&${search}`)
+      .then(res => {
+        setPizzas(res.data);
         setIsLoading(false);
-      });
+      })
+
     window.scrollTo(0, 0);
   }, [category, sort.sortProperty, searchValue, currentPage]);
 
