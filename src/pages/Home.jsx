@@ -1,4 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
+//redux
+import { setCategoryId } from '../redux/slices/filterSlice';
 
 import Categories from '../components/Categories';
 import Sort from '../components/Sort';
@@ -7,22 +11,24 @@ import Skeleton from '../components/Pizza/Skeleton';
 import Pagination from '../components/Pagination';
 import { SearchContext } from '../App';
 
-export default function Home() {
+const Home = () => {
+  const dispatch = useDispatch();
+  const {category, sort} = useSelector(state => state.filter);
+  
   const { searchValue } = React.useContext(SearchContext);
   const [pizzas, setPizzas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [category, setCategory] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [activeSortCategory, setActiveSortCategory] = useState({
-    name: 'популярности',
-    sortProperty: 'rating',
-  });
+
+  const onClickCategory = (id) => {
+    dispatch(setCategoryId(id));
+  }
 
   React.useEffect(() => {
     setIsLoading(true);
 
-    const order = activeSortCategory.sortProperty.includes('-') ? 'asc' : 'desc';
-    const sortBy = activeSortCategory.sortProperty.replace('-', '');
+    const order = sort.sortProperty.includes('-') ? 'asc' : 'desc';
+    const sortBy = sort.sortProperty.replace('-', '');
     const currentCategory = category > 0 ? `category=${category}` : '';
     const search = searchValue ? `search=${searchValue}` : '';
 
@@ -34,7 +40,7 @@ export default function Home() {
         setIsLoading(false);
       });
     window.scrollTo(0, 0);
-  }, [category, activeSortCategory, searchValue, currentPage]);
+  }, [category, sort.sortProperty, searchValue, currentPage]);
 
   const renderPizzas = pizzas
     //.filter(obj => obj.title.toLowerCase().includes(searchValue.toLowerCase()))
@@ -44,14 +50,16 @@ export default function Home() {
   return (
     <div className="container">
       <div className="content__top">
-        <Categories category={category} onClickCategory={(i) => setCategory(i)} />
-        <Sort activeSortCategory={activeSortCategory} onClickSort={((i) => setActiveSortCategory(i))} />
+        <Categories category={category} onClickCategory={onClickCategory} />
+        <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">
         {isLoading ? skeleton : renderPizzas}
       </div>
-      <Pagination onChangePage={(number) => setCurrentPage(number)}/>
+      <Pagination onChangePage={(number) => setCurrentPage(number)} />
     </div>
   )
 }
+
+export default Home;
